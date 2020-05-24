@@ -1,25 +1,18 @@
-from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+from django.conf import settings
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=255)
 
 
 class Element(models.Model):
     description = models.CharField(null=True, blank=True, max_length=10000)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="elements")
     title = models.CharField(null=True, blank=True, max_length=500)
+    tags = models.ManyToManyField('Tag', through="Tagging")
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(max_length=500, blank=True)
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+class Tagging(models.Model):
+    elements = models.ForeignKey('Element', on_delete=models.CASCADE)
+    tags = models.ForeignKey('Tag', on_delete=models.CASCADE)
