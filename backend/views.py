@@ -12,7 +12,7 @@ class ElementViewSet(viewsets.ModelViewSet):
     serializer_class = ElementSerializer
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["tags__name", "user", "title"]
-    search_fields = ['username', 'title']
+    search_fields = ['description', 'title']
     
     def list(self, request, *args, **kwargs):
         tags = request.GET.get('tags', None)
