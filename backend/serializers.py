@@ -36,9 +36,8 @@ class ElementSerializer(serializers.ModelSerializer):
         if tags_data:
             for tag in tags_data:
                 tags, created = Tag.objects.get_or_create(name=tag['name'])
-                if Tagging.objects.filter(elements=element, tags=tags).count() == 0:
-                    tp = Tagging(elements=element, tags=tags)
-                    tp.save()
+                tp = Tagging.objects.get_or_create(elements=element, tags=tags)
+                tp.save()
         return element
 
 
