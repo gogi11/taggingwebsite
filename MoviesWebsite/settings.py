@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'backend',
+    'frontend',
     'django_filters',
 ]
 
@@ -128,4 +129,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 TAGGIT_CASE_INSENSITIVE = True
+LOGIN_REDIRECT_URL = 'home'
+TEMPLATE_DIRS = (
+    BASE_DIR + '/templates/',
+)
 
