@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'backend',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -79,9 +80,9 @@ WSGI_APPLICATION = 'MoviesWebsite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cjlvudbo',
-        'USER': 'cjlvudbo',
-        'PASSWORD': 'G22BomFG9bVUszRU7wLnbo-8QEqNbaXZ',
+        'NAME': 'yuwthjwb',
+        'USER': 'yuwthjwb',
+        'PASSWORD': 'zOZU7nClEEVis9xAXIo93mKWQCpPX9kD',
         'HOST': 'dumbo.db.elephantsql.com',
         'PORT': '5432',
     }
