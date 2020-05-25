@@ -19,7 +19,7 @@ class ElementViewSet(viewsets.ModelViewSet):
         if tags:
             tags = str(tags).split(",")
             self.queryset = Element.objects.filter(tags__name__in=tags).distinct()
-        return super(ElementViewSet, self).list(request, *args,  **kwargs)
+        return super(ElementViewSet, self).list(request, *args, **kwargs)
 
 
 class UserViewSet(viewsets.ModelViewSet):
