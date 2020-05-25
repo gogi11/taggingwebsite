@@ -16,9 +16,14 @@ class ElementViewSet(viewsets.ModelViewSet):
     
     def list(self, request, *args, **kwargs):
         tags = request.GET.get('tags', None)
+        or_operator = request.GET.get('or', False)
         if tags:
             tags = str(tags).split(",")
-            self.queryset = Element.objects.filter(tags__name__in=tags).distinct()
+            if not or_operator:
+                for tag in tags:
+                    self.queryset = Element.objects.filter(tags__name=tag)
+            else:
+                self.queryset = Element.objects.filter(tags__name__in=tags).distinct()
         return super(ElementViewSet, self).list(request, *args, **kwargs)
 
 
