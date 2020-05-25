@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'backend',
-    'frontend',
     'django_filters',
 ]
 
@@ -79,12 +77,20 @@ WSGI_APPLICATION = 'MoviesWebsite.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'yuwthjwb',
+    #     'USER': 'yuwthjwb',
+    #     'PASSWORD': 'zOZU7nClEEVis9xAXIo93mKWQCpPX9kD',
+    #     'HOST': 'dumbo.db.elephantsql.com',
+    #     'PORT': '5432',
+    # },
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'yuwthjwb',
-        'USER': 'yuwthjwb',
-        'PASSWORD': 'zOZU7nClEEVis9xAXIo93mKWQCpPX9kD',
-        'HOST': 'dumbo.db.elephantsql.com',
+        'NAME': 'movies',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -130,7 +136,3 @@ STATIC_URL = '/static/'
 
 TAGGIT_CASE_INSENSITIVE = True
 LOGIN_REDIRECT_URL = 'home'
-TEMPLATE_DIRS = (
-    BASE_DIR + '/templates/',
-)
-
