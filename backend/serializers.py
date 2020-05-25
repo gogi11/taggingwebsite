@@ -17,8 +17,13 @@ class TagSerializer(serializers.ModelSerializer):
             'name': {'required': True, 'validators': []}
         }
 
+class AbstractModelSerializer(serializers.ModelSerializer):
+    def get_user_from_request(self):
+        request = self.context.get("request", None)
+        return request.user if request and request.user.is_authenticated else None
 
-class ElementSerializer(serializers.ModelSerializer):
+
+class ElementSerializer(AbstractModelSerializer):
     tags = TagSerializer(many=True, required=False)
 
     class Meta:
@@ -29,8 +34,7 @@ class ElementSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        request = self.context.get("request", None)
-        user = request.user if request and request.user.is_authenticated else None
+        user = self.get_user_from_request()
         tags_data = validated_data.pop("tags", None)
         element = Element.objects.create(user=user, **validated_data)
         if tags_data:
@@ -41,8 +45,7 @@ class ElementSerializer(serializers.ModelSerializer):
         return element
 
     def update(self, instance, validated_data):
-        request = self.context.get("request", None)
-        user = request.user if request and request.user.is_authenticated else None
+        user = self.get_user_from_request()
         if not user or user.id == instance.id:
             tags_data = validated_data.pop("tags", None)
             if tags_data:
@@ -59,11 +62,28 @@ class ElementSerializer(serializers.ModelSerializer):
         raise ValidationError(detail="You don't have permission to update it!")
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(AbstractModelSerializer):
     class Meta:
         model = User
         fields = ['password', 'username']
         extra_kwargs = {
-            'password': {'write_only': True}
+            'password': {'write_only': True, 'required': True},
+            'username': {'required': True},
         }
 
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = User.objects.create(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password")
+        req_user = self.get_user_from_request()
+        if req_user and req_user.id == instance.id:
+            instance.set_password(password)
+            instance.save()
+            return super(UserSerializer, self).update(instance, validated_data)
+        else:
+            raise ValidationError(detail="You are trying to update another person's profile!")
