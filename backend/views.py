@@ -1,10 +1,28 @@
 import django_filters
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets, filters
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, BasePermission, SAFE_METHODS
+
 from backend.models import Element
 from backend.serializers import ElementSerializer, UserSerializer
 
 User = get_user_model()
+
+
+class IsUserOrAdmin(BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user or request.user.is_staff)
+
+    def has_object_permission(self, request, view, obj):
+        return bool(request.user and (obj == request.user or request.user.is_staff))
+
+
+class BelongsToUserOrIsAdmin(BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user or request.user.is_staff)
+
+    def has_object_permission(self, request, view, obj):
+        return bool(request.user and (obj.user == request.user or request.user.is_staff))
 
 
 class ElementViewSet(viewsets.ModelViewSet):
@@ -13,6 +31,7 @@ class ElementViewSet(viewsets.ModelViewSet):
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["tags__name", "user", "title"]
     search_fields = ['description', 'title']
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
     def list(self, request, *args, **kwargs):
         tags = request.GET.get('tags', None)
@@ -28,7 +47,14 @@ class ElementViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsUserOrAdmin]
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return User.objects.all()
+        else:
+            return User.objects.filter(pk=self.request.user.pk)
+
 
 
