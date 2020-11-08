@@ -50,10 +50,10 @@ class TestUserViewSet(TestCase):
 
     def test_get_user_detail_doesnt_work_when_you_try_to_get_other_user(self):
         response = self.clientOther.get(reverse("user-detail", kwargs={"pk": self.user.pk}))
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
 
     def test_get_user_detail_doesnt_work_when_unauthenticated(self):
         response = self.clientUnauthenticated.get(reverse("user-detail", kwargs={"pk": self.user.pk}))
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
 
 # Create your tests here.
