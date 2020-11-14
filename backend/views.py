@@ -1,7 +1,7 @@
 import django_filters
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets, filters
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, BasePermission, SAFE_METHODS
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 from backend.models import Element
 from backend.serializers import ElementSerializer, UserSerializer
@@ -17,12 +17,11 @@ class IsUserOrAdmin(BasePermission):
         return bool(request.user and (obj == request.user or request.user.is_staff))
 
 
-class BelongsToUserOrIsAdmin(BasePermission):
+class IsAuthenticatedOrReadOnly(BasePermission):
     def has_permission(self, request, view):
-        return bool(request.user or request.user.is_staff)
-
-    def has_object_permission(self, request, view, obj):
-        return bool(request.user and (obj.user == request.user or request.user.is_staff))
+        return bool(
+            request.method in SAFE_METHODS or (request.user and request.user.is_authenticated)
+        )
 
 
 class ElementViewSet(viewsets.ModelViewSet):

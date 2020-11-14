@@ -5,6 +5,9 @@ from django.conf import settings
 class Tag(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Element(models.Model):
     description = models.CharField(null=True, blank=True, max_length=10000)
@@ -14,5 +17,5 @@ class Element(models.Model):
 
 
 class Tagging(models.Model):
-    elements = models.ForeignKey('Element', on_delete=models.CASCADE)
-    tags = models.ForeignKey('Tag', on_delete=models.CASCADE)
+    element = models.ForeignKey('Element', on_delete=models.CASCADE)
+    tag = models.ForeignKey('Tag', on_delete=models.CASCADE)
