@@ -8,17 +8,21 @@ from rest_framework.test import APIClient
 from backend.models import Element, Tag, Tagging
 
 
+def set_credentials(client, username, password="Qwerty1234!"):
+    response = client.post(
+        reverse("rest_login"), data={"username": username, "password": password}
+    )
+    json_content = json.loads(response.content)
+    client.credentials(HTTP_AUTHORIZATION="Bearer " + json_content.get("key"))
+
+
 def get_user_and_client(username, password="Qwerty1234!", is_staff=False):
     user, exists = User.objects.get_or_create(username=username, is_staff=is_staff)
     user.set_password(password)
     user.save()
     client = APIClient()
     client.login(user=user, password=password)
-    response = client.post(
-        reverse("rest_login"), data={"username": username, "password": password}
-    )
-    json_content = json.loads(response.content)
-    client.credentials(HTTP_AUTHORIZATION="Bearer " + json_content.get("key"))
+    set_credentials(client, username, password)
     return user, client
 
 

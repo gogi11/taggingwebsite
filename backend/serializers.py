@@ -29,7 +29,7 @@ class ElementSerializer(AbstractModelSerializer):
 
     class Meta:
         model = Element
-        fields = ["description", "user", "title", "tags"]
+        fields = ["description", "user", "title", "tags", "id"]
         extra_kwargs = {
             'user': {'read_only': True}
         }
@@ -64,12 +64,16 @@ class ElementSerializer(AbstractModelSerializer):
 
 
 class UserSerializer(AbstractModelSerializer):
+    tags = TagSerializer(required=False, many=True)
+
     class Meta:
         model = User
-        fields = ['password', 'username']
+        fields = ['password', 'username', 'id', 'tags']
         extra_kwargs = {
+            'id': {'read_only': True},
             'password': {'write_only': True, 'required': True},
             'username': {'required': True},
+            'tags': {'read_only': True}
         }
 
     def create(self, validated_data):
