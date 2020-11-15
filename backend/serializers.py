@@ -47,7 +47,7 @@ class ElementSerializer(AbstractModelSerializer):
 
     def update(self, instance, validated_data):
         user = self.get_user_from_request()
-        if not user or user.id == instance.id:
+        if not user or user.id == instance.user.id:
             tags_data = validated_data.pop("tags", None)
             if tags_data:
                 for tag in tags_data:
