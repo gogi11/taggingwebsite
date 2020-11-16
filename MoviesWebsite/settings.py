@@ -116,12 +116,16 @@ DATABASES = {
 # 'HOST': 'dumbo.db.elephantsql.com',
 # 'PORT': '5432',
 
-CORS_ALLOWED_ORIGINS = [
-    "https://tagging-website.netlify.app/"
-]
 
-if DEBUG:
-    CORS_ALLOWED_ORIGINS.append("http://localhost:8080")
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+#
+# CORS_ALLOWED_ORIGINS = [
+#     "https://tagging-website.netlify.app/"
+# ]
+#
+# if DEBUG:
+#     CORS_ALLOWED_ORIGINS.append("http://localhost:8080")
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
