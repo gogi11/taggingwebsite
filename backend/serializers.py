@@ -24,8 +24,40 @@ class AbstractModelSerializer(serializers.ModelSerializer):
         return request.user if request and request.user.is_authenticated else None
 
 
+class UserSerializer(AbstractModelSerializer):
+    tags = TagSerializer(required=False, many=True)
+
+    class Meta:
+        model = User
+        fields = ['password', 'username', 'id', 'tags']
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'password': {'write_only': True, 'required': True},
+            'username': {'required': True},
+            'tags': {'read_only': True}
+        }
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = User.objects.create(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password")
+        req_user = self.get_user_from_request()
+        if req_user and req_user.id == instance.id:
+            instance.set_password(password)
+            instance.save()
+            return super(UserSerializer, self).update(instance, validated_data)
+        else:
+            raise ValidationError(detail="You are trying to update another person's profile!")
+
+
 class ElementSerializer(AbstractModelSerializer):
     tags = TagSerializer(many=True, required=False)
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Element
@@ -61,34 +93,3 @@ class ElementSerializer(AbstractModelSerializer):
                         tp.save()
             return super(ElementSerializer, self).update(instance, validated_data)
         raise ValidationError(detail="You don't have permission to update it!")
-
-
-class UserSerializer(AbstractModelSerializer):
-    tags = TagSerializer(required=False, many=True)
-
-    class Meta:
-        model = User
-        fields = ['password', 'username', 'id', 'tags']
-        extra_kwargs = {
-            'id': {'read_only': True},
-            'password': {'write_only': True, 'required': True},
-            'username': {'required': True},
-            'tags': {'read_only': True}
-        }
-
-    def create(self, validated_data):
-        password = validated_data.pop("password")
-        user = User.objects.create(**validated_data)
-        user.set_password(password)
-        user.save()
-        return user
-
-    def update(self, instance, validated_data):
-        password = validated_data.pop("password")
-        req_user = self.get_user_from_request()
-        if req_user and req_user.id == instance.id:
-            instance.set_password(password)
-            instance.save()
-            return super(UserSerializer, self).update(instance, validated_data)
-        else:
-            raise ValidationError(detail="You are trying to update another person's profile!")
