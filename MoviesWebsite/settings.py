@@ -117,9 +117,11 @@ DATABASES = {
 # 'PORT': '5432',
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "http://127.0.0.1:8080"
+    "https://tagging-website.netlify.app/"
 ]
+
+if DEBUG:
+    CORS_ALLOWED_ORIGINS.append("http://localhost:8080")
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
