@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import environ
+import django_heroku
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,12 +23,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+env = environ.Env()
+env.read_env()
+
 SECRET_KEY = 'cf@_&3$4^s#aasueq3eez#79b_r40khx1(+b)l!23dzw!9opfc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+if "DEBUG" in os.environ and os.environ["DEBUG"]:
+    DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = [
+
+]
 
 
 # Application definition
@@ -79,7 +90,6 @@ WSGI_APPLICATION = 'MoviesWebsite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
 DATABASES = {
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
@@ -98,6 +108,14 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# 'ENGINE': 'django.db.backends.postgresql',
+# 'NAME': 'yuwthjwb',
+# 'USER': 'yuwthjwb',
+# 'PASSWORD': 'zOZU7nClEEVis9xAXIo93mKWQCpPX9kD',
+# 'HOST': 'dumbo.db.elephantsql.com',
+# 'PORT': '5432',
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8080"
@@ -139,6 +157,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 TAGGIT_CASE_INSENSITIVE = True
@@ -153,3 +172,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
 }
+
+if not DEBUG:
+    django_heroku.settings(locals())
