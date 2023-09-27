@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env = environ.Env()
 env.read_env()
 
-SECRET_KEY = env('SECRET_KEY', '')
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -89,11 +89,11 @@ WSGI_APPLICATION = 'MoviesWebsite.wsgi.application'
 
 
 
-db_name = env('DB_NAME', '')
-db_user = env('DB_USER', '')
-db_pass = env('DB_PASSWORD', '')
-db_host = env('DB_HOST', '')
-db_port = env('DB_PORT', '')
+db_name = env('DB_NAME')
+db_user = env('DB_USER')
+db_pass = env('DB_PASSWORD')
+db_host = env('DB_HOST')
+db_port = env('DB_PORT')
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
