@@ -35,7 +35,16 @@ if "DEBUG" in os.environ and os.environ["DEBUG"]:
 
 
 ALLOWED_HOSTS = [
-
+'gogi11.eu.pythonanywhere.com',
+'http://gogi11.eu.pythonanywhere.com',
+'https://gogi11.eu.pythonanywhere.com',
+'localhost',
+'http://localhost',
+'https://localhost',
+'127.0.0.1',
+'http://127.0.0.1',
+'https://127.0.0.1',
+'https://tagging-website.netlify.app/#/',
 ]
 
 
@@ -99,7 +108,7 @@ db_port = env('DB_PORT')
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': db_name,
         'USER': db_user,
         'PASSWORD': db_pass,
